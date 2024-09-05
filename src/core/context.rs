@@ -14,8 +14,12 @@ pub struct Context {
     pub size: winit::dpi::PhysicalSize<u32>,
     render_pipeline: wgpu::RenderPipeline,
     pub update_color: bool,
+
     vertex_buffer: wgpu::Buffer,
     num_vertices: u32,
+
+    index_buffer: wgpu::Buffer,
+    num_indices: u32,
 }
 
 impl Context {
@@ -134,6 +138,12 @@ impl Context {
             usage: wgpu::BufferUsages::VERTEX,
         });
 
+        let index_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("Index Buffer"),
+            contents: bytemuck::cast_slice(core::vertex::INDICES),
+            usage: wgpu::BufferUsages::INDEX,
+        });
+
         Self {
             surface,
             device,
@@ -142,8 +152,12 @@ impl Context {
             size,
             render_pipeline,
             update_color: true,
+
             vertex_buffer,
             num_vertices: core::vertex::VERTICES.len() as u32,
+
+            index_buffer,
+            num_indices: core::vertex::INDICES.len() as u32,
         }
     }
 
@@ -194,7 +208,10 @@ impl Context {
             if self.update_color {
                 render_pass.set_pipeline(&self.render_pipeline);
                 render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
-                render_pass.draw(0..self.num_vertices, 0..1);
+                render_pass
+                    .set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
+                render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
+                // render_pass.draw(0..self.num_vertices, 0..1);
             }
         }
 
