@@ -8,18 +8,19 @@ use crate::core;
 #[derive(Debug)]
 pub struct Context {
     surface: wgpu::Surface<'static>,
-    device: wgpu::Device,
+    pub device: wgpu::Device,
     queue: wgpu::Queue,
     config: wgpu::SurfaceConfiguration,
     pub size: winit::dpi::PhysicalSize<u32>,
     render_pipeline: wgpu::RenderPipeline,
-    pub update_color: bool,
 
-    vertex_buffer: wgpu::Buffer,
-    num_vertices: u32,
+    pub fig_idx: u8,
 
-    index_buffer: wgpu::Buffer,
-    num_indices: u32,
+    pub vertex_buffer: wgpu::Buffer,
+    pub num_vertices: u32,
+
+    pub index_buffer: wgpu::Buffer,
+    pub num_indices: u32,
 }
 
 impl Context {
@@ -132,15 +133,19 @@ impl Context {
             cache: None,
         });
 
+        let fig_idx = 0;
+        let figure = core::Figure::get_figure(fig_idx);
+        let (vertices, indices) = figure.get_vertices_and_indices();
+
         let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
             label: Some("Vertex Buffer"),
-            contents: bytemuck::cast_slice(core::vertex::VERTICES),
+            contents: bytemuck::cast_slice(vertices),
             usage: wgpu::BufferUsages::VERTEX,
         });
 
         let index_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
             label: Some("Index Buffer"),
-            contents: bytemuck::cast_slice(core::vertex::INDICES),
+            contents: bytemuck::cast_slice(indices),
             usage: wgpu::BufferUsages::INDEX,
         });
 
@@ -151,13 +156,14 @@ impl Context {
             config,
             size,
             render_pipeline,
-            update_color: true,
+
+            fig_idx,
 
             vertex_buffer,
-            num_vertices: core::vertex::VERTICES.len() as u32,
+            num_vertices: vertices.len() as u32,
 
             index_buffer,
-            num_indices: core::vertex::INDICES.len() as u32,
+            num_indices: indices.len() as u32,
         }
     }
 
@@ -205,14 +211,10 @@ impl Context {
                 timestamp_writes: None,
             });
 
-            if self.update_color {
-                render_pass.set_pipeline(&self.render_pipeline);
-                render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
-                render_pass
-                    .set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
-                render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
-                // render_pass.draw(0..self.num_vertices, 0..1);
-            }
+            render_pass.set_pipeline(&self.render_pipeline);
+            render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
+            render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
+            render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
         }
 
         self.queue.submit(std::iter::once(encoder.finish()));
