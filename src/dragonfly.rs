@@ -12,13 +12,27 @@ use winit::{
 
 use crate::core;
 
+/// The application state.
+///
+/// Contains the window and the graphics context.
 #[derive(Debug, Default)]
 pub struct Dragonfly {
+    /// The graphics context.
+    ///
+    /// Contains the data necessary to render the scene.
     context: Option<core::Context>,
+
+    /// The window.
+    ///
+    /// The window is the platform-specific structure that holds the window
+    /// and its associated resources.
     window: Option<Arc<Window>>,
 }
 
 impl ApplicationHandler for Dragonfly {
+    /// Handles the `Resumed` event, which is called when the event loop is started.
+    ///
+    /// If the window is `None`, the window is created and the context is initialized.
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         if self.window.is_none() {
             let window_attributes = Window::default_attributes()
@@ -39,6 +53,19 @@ impl ApplicationHandler for Dragonfly {
         }
     }
 
+    /// Handles a window event.
+    ///
+    /// This method will be called when an event occurs on the window.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if a `RedrawRequested` event is received and the
+    /// context cannot be rendered.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the window id is not the same as the id of the window stored in the
+    /// context.
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _id: WindowId, event: WindowEvent) {
         match event {
             WindowEvent::RedrawRequested => {

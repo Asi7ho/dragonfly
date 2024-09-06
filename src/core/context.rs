@@ -5,26 +5,47 @@ use winit::window::Window;
 
 use crate::core;
 
+/// Graphics context for rendering.
+///
+/// This type holds all the necessary data to render a `Figure` on a window using the
+/// `wgpu` library.
 #[derive(Debug)]
 pub struct Context {
-    surface: wgpu::Surface<'static>,
+    /// The surface to render on.
+    pub surface: wgpu::Surface<'static>,
+    /// The device to use for rendering.
     pub device: wgpu::Device,
-    queue: wgpu::Queue,
-    config: wgpu::SurfaceConfiguration,
+    /// The queue to use for rendering.
+    pub queue: wgpu::Queue,
+    /// The surface configuration.
+    pub config: wgpu::SurfaceConfiguration,
+    /// The size of the window.
     pub size: winit::dpi::PhysicalSize<u32>,
-    render_pipeline: wgpu::RenderPipeline,
+    /// The render pipeline.
+    pub render_pipeline: wgpu::RenderPipeline,
 
+    /// The index of the current figure.
     pub fig_idx: u8,
 
+    /// The vertex buffer.
     pub vertex_buffer: wgpu::Buffer,
+    /// The number of vertices in the vertex buffer.
     pub num_vertices: u32,
 
+    /// The index buffer.
     pub index_buffer: wgpu::Buffer,
+    /// The number of indices in the index buffer.
     pub num_indices: u32,
 }
 
 impl Context {
-    // Creating some of the wgpu types requires async code
+    /// Creates a new graphics context for rendering on the given window.
+    ///
+    /// The context consists of a `wgpu` instance, surface, device, queue, and surface
+    /// configuration. Additionally, it creates a shader module, render pipeline
+    /// layout, and render pipeline.
+    ///
+    /// The context is configured for the initial window size and the first figure.
     pub async fn new(window: &Arc<Window>) -> Self {
         let size = window.inner_size();
 
@@ -86,8 +107,10 @@ impl Context {
             desired_maximum_frame_latency: 1,
         };
 
+        // Create a shader module from a shader written in WGSL.
         let shader = device.create_shader_module(wgpu::include_wgsl!("../../shader/shader.wgsl"));
 
+        // Create the render pipeline layout.
         let render_pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: None,
@@ -95,15 +118,18 @@ impl Context {
                 push_constant_ranges: &[],
             });
 
+        // Create the render pipeline.
         let render_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
             label: None,
             layout: Some(&render_pipeline_layout),
+            // Read vertex shader
             vertex: wgpu::VertexState {
                 module: &shader,
                 entry_point: "vs_main",
                 buffers: &[core::vertex::Vertex::desc()],
                 compilation_options: wgpu::PipelineCompilationOptions::default(),
             },
+            // Read fragment shader
             fragment: Some(wgpu::FragmentState {
                 module: &shader,
                 entry_point: "fs_main",
@@ -114,6 +140,7 @@ impl Context {
                 })],
                 compilation_options: wgpu::PipelineCompilationOptions::default(),
             }),
+            // Set the topology
             primitive: wgpu::PrimitiveState {
                 topology: wgpu::PrimitiveTopology::TriangleList,
                 strip_index_format: None,
@@ -133,10 +160,12 @@ impl Context {
             cache: None,
         });
 
+        // Set the initial figure
         let fig_idx = 0;
         let figure = core::Figure::get_figure(fig_idx);
         let (vertices, indices) = figure.get_vertices_and_indices();
 
+        // Create the vertex and index buffers
         let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
             label: Some("Vertex Buffer"),
             contents: bytemuck::cast_slice(vertices),
@@ -167,6 +196,9 @@ impl Context {
         }
     }
 
+    /// Resizes the graphics context for the given window size.
+    ///
+    /// The `device` and `surface` fields are updated for the new window size.
     pub fn resize(&mut self, new_size: winit::dpi::PhysicalSize<u32>) {
         // Update config and surface for new window size.
         if new_size.width > 0 && new_size.height > 0 {
@@ -177,6 +209,15 @@ impl Context {
         }
     }
 
+    /// Renders the current figure on the window.
+    ///
+    /// This method acquires the current frame from the window, clears the render
+    /// target, sets up the vertex and index buffers, renders the figure, and
+    /// presents the frame.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the current frame could not be acquired from the window.
     pub fn render(&mut self) -> Result<(), wgpu::SurfaceError> {
         // Get current frame.
         let frame = self
@@ -211,12 +252,14 @@ impl Context {
                 timestamp_writes: None,
             });
 
+            // Render the figure
             render_pass.set_pipeline(&self.render_pipeline);
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
             render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
             render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
         }
 
+        // Submit the operations
         self.queue.submit(std::iter::once(encoder.finish()));
         frame.present();
 
