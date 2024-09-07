@@ -7,8 +7,8 @@ use crate::core;
 
 /// Graphics context for rendering.
 ///
-/// This type holds all the necessary data to render a `Figure` on a window using the
-/// `wgpu` library.
+/// This type holds all the necessary data to render a `Figure` on a window
+/// using the `wgpu` library.
 #[derive(Debug)]
 pub struct Context {
     /// The surface to render on.
@@ -41,11 +41,12 @@ pub struct Context {
 impl Context {
     /// Creates a new graphics context for rendering on the given window.
     ///
-    /// The context consists of a `wgpu` instance, surface, device, queue, and surface
-    /// configuration. Additionally, it creates a shader module, render pipeline
-    /// layout, and render pipeline.
+    /// The context consists of a `wgpu` instance, surface, device, queue, and
+    /// surface configuration. Additionally, it creates a shader module, render
+    /// pipeline layout, and render pipeline.
     ///
-    /// The context is configured for the initial window size and the first figure.
+    /// The context is configured for the initial window size and the first
+    /// figure.
     pub async fn new(window: &Arc<Window>) -> Self {
         let size = window.inner_size();
 
@@ -70,8 +71,8 @@ impl Context {
             .await
             .expect("Failed to create adapter");
 
-        // Request a logical device and command queue from the adapter with no extra
-        // features and default limits.
+        // Request a logical device and command queue from the adapter with
+        // no extra features and default limits.
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
@@ -211,13 +212,14 @@ impl Context {
 
     /// Renders the current figure on the window.
     ///
-    /// This method acquires the current frame from the window, clears the render
-    /// target, sets up the vertex and index buffers, renders the figure, and
-    /// presents the frame.
+    /// This method acquires the current frame from the window, clears the
+    /// render target, sets up the vertex and index buffers, renders the
+    /// figure, and presents the frame.
     ///
     /// # Errors
     ///
-    /// Returns an error if the current frame could not be acquired from the window.
+    /// Returns an error if the current frame could not be acquired from the
+    /// window.
     pub fn render(&mut self) -> Result<(), wgpu::SurfaceError> {
         // Get current frame.
         let frame = self

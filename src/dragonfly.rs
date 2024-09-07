@@ -30,9 +30,11 @@ pub struct Dragonfly {
 }
 
 impl ApplicationHandler for Dragonfly {
-    /// Handles the `Resumed` event, which is called when the event loop is started.
+    /// Handles the `Resumed` event, which is called when the event loop is
+    /// started.
     ///
-    /// If the window is `None`, the window is created and the context is initialized.
+    /// If the window is `None`, the window is created and the context is
+    /// initialized.
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         if self.window.is_none() {
             let window_attributes = Window::default_attributes()
@@ -64,8 +66,8 @@ impl ApplicationHandler for Dragonfly {
     ///
     /// # Panics
     ///
-    /// Panics if the window id is not the same as the id of the window stored in the
-    /// context.
+    /// Panics if the window id is not the same as the id of the window stored
+    /// in the context.
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _id: WindowId, event: WindowEvent) {
         match event {
             WindowEvent::RedrawRequested => {
@@ -79,7 +81,8 @@ impl ApplicationHandler for Dragonfly {
                     }
                     // The system is out of memory, we should probably quit
                     Err(wgpu::SurfaceError::OutOfMemory) => event_loop.exit(),
-                    // All other errors (Outdated, Timeout) should be resolved by the next frame
+                    // All other errors (Outdated, Timeout) should be resolved
+                    // by the next frame
                     Err(e) => eprintln!("{:?}", e),
                 }
             }
