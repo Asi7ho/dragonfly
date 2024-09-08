@@ -49,6 +49,7 @@ pub enum Figure {
     Rectange,
     Trapezoid,
     Parallelogram,
+    Circle,
 }
 
 impl Figure {
@@ -60,6 +61,7 @@ impl Figure {
             Figure::Rectange => (RECTANGLE_VERTICES, RECTANGLE_INDICES),
             Figure::Trapezoid => (TRAPEZOID_VERTICES, TRAPEZOID_INDICES),
             Figure::Parallelogram => (PARALLELOGRAM_VERTICES, PARALLELOGRAM_INDICES),
+            Figure::Circle => (CIRCLE_VERTICES, CIRCLE_INDICES),
         }
     }
 
@@ -74,6 +76,7 @@ impl Figure {
             2 => Figure::Rectange,
             3 => Figure::Trapezoid,
             4 => Figure::Parallelogram,
+            5 => Figure::Circle,
             _ => Figure::Triangle,
         }
     }
@@ -187,3 +190,80 @@ const PARALLELOGRAM_VERTICES: &[Vertex] = &[
     },
 ];
 const PARALLELOGRAM_INDICES: &[u16] = &[0, 1, 2, 0, 2, 3];
+
+// Circle
+const CIRCLE_VERTICES: &[Vertex] = &[
+    Vertex {
+        position: [0.0, 0.0, 0.0],
+        color: [1.0, 1.0, 1.0],
+    },
+    Vertex {
+        position: [0.5, 0.0, 0.0],
+        color: [1.0, 0.0, 0.0],
+    },
+    Vertex {
+        position: [0.4619398, 0.19134172, 0.0],
+        color: [0.0, 1.0, 0.0],
+    },
+    Vertex {
+        position: [0.35355338, 0.35355338, 0.0],
+        color: [0.0, 0.0, 1.0],
+    },
+    Vertex {
+        position: [0.19134172, 0.4619398, 0.0],
+        color: [1.0, 1.0, 0.0],
+    },
+    Vertex {
+        position: [0.0, 0.5, 0.0],
+        color: [1.0, 0.0, 1.0],
+    },
+    Vertex {
+        position: [-0.19134172, 0.4619398, 0.0],
+        color: [0.0, 1.0, 1.0],
+    },
+    Vertex {
+        position: [-0.35355338, 0.35355338, 0.0],
+        color: [0.5, 0.5, 0.5],
+    },
+    Vertex {
+        position: [-0.4619398, 0.19134172, 0.0],
+        color: [1.0, 0.5, 0.0],
+    },
+    Vertex {
+        position: [-0.5, 0.0, 0.0],
+        color: [0.0, 1.0, 0.5],
+    },
+    Vertex {
+        position: [-0.4619398, -0.19134172, 0.0],
+        color: [0.5, 0.0, 1.0],
+    },
+    Vertex {
+        position: [-0.35355338, -0.35355338, 0.0],
+        color: [1.0, 0.0, 0.5],
+    },
+    Vertex {
+        position: [-0.19134172, -0.4619398, 0.0],
+        color: [0.5, 1.0, 0.0],
+    },
+    Vertex {
+        position: [0.0, -0.5, 0.0],
+        color: [0.0, 0.5, 1.0],
+    },
+    Vertex {
+        position: [0.19134172, -0.4619398, 0.0],
+        color: [1.0, 0.5, 0.5],
+    },
+    Vertex {
+        position: [0.35355338, -0.35355338, 0.0],
+        color: [0.5, 1.0, 0.5],
+    },
+    Vertex {
+        position: [0.4619398, -0.19134172, 0.0],
+        color: [0.5, 0.5, 1.0],
+    },
+];
+
+const CIRCLE_INDICES: &[u16] = &[
+    0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6, 0, 6, 7, 0, 7, 8, 0, 8, 9, 0, 9, 10, 0, 10, 11, 0,
+    11, 12, 0, 12, 13, 0, 13, 14, 0, 14, 15, 0, 15, 16, 0, 16, 1,
+];

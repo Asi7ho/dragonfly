@@ -100,39 +100,42 @@ impl ApplicationHandler for Dragonfly {
             WindowEvent::KeyboardInput {
                 event:
                     winit::event::KeyEvent {
+                        state,
                         physical_key:
                             winit::keyboard::PhysicalKey::Code(winit::keyboard::KeyCode::Space),
                         ..
                     },
                 ..
             } => {
-                let fig_idx = self.context.as_ref().unwrap().fig_idx;
-                let new_fig_idx = (fig_idx + 1) % 5;
+                if state == winit::event::ElementState::Released {
+                    let fig_idx = self.context.as_ref().unwrap().fig_idx;
+                    let new_fig_idx = (fig_idx + 1) % 6;
 
-                self.context.as_mut().unwrap().fig_idx = new_fig_idx;
+                    self.context.as_mut().unwrap().fig_idx = new_fig_idx;
 
-                let figure = core::Figure::get_figure(new_fig_idx);
-                let (vertices, indices) = figure.get_vertices_and_indices();
+                    let figure = core::Figure::get_figure(new_fig_idx);
+                    let (vertices, indices) = figure.get_vertices_and_indices();
 
-                self.context.as_mut().unwrap().vertex_buffer =
-                    self.context.as_mut().unwrap().device.create_buffer_init(
-                        &wgpu::util::BufferInitDescriptor {
-                            label: Some("Vertex Buffer"),
-                            contents: bytemuck::cast_slice(vertices),
-                            usage: wgpu::BufferUsages::VERTEX,
-                        },
-                    );
-                self.context.as_mut().unwrap().num_vertices = vertices.len() as u32;
+                    self.context.as_mut().unwrap().vertex_buffer =
+                        self.context.as_mut().unwrap().device.create_buffer_init(
+                            &wgpu::util::BufferInitDescriptor {
+                                label: Some("Vertex Buffer"),
+                                contents: bytemuck::cast_slice(vertices),
+                                usage: wgpu::BufferUsages::VERTEX,
+                            },
+                        );
+                    self.context.as_mut().unwrap().num_vertices = vertices.len() as u32;
 
-                self.context.as_mut().unwrap().index_buffer =
-                    self.context.as_mut().unwrap().device.create_buffer_init(
-                        &wgpu::util::BufferInitDescriptor {
-                            label: Some("Index Buffer"),
-                            contents: bytemuck::cast_slice(indices),
-                            usage: wgpu::BufferUsages::INDEX,
-                        },
-                    );
-                self.context.as_mut().unwrap().num_indices = indices.len() as u32;
+                    self.context.as_mut().unwrap().index_buffer =
+                        self.context.as_mut().unwrap().device.create_buffer_init(
+                            &wgpu::util::BufferInitDescriptor {
+                                label: Some("Index Buffer"),
+                                contents: bytemuck::cast_slice(indices),
+                                usage: wgpu::BufferUsages::INDEX,
+                            },
+                        );
+                    self.context.as_mut().unwrap().num_indices = indices.len() as u32;
+                }
 
                 self.window.as_ref().unwrap().request_redraw();
             }
