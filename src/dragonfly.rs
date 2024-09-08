@@ -40,7 +40,7 @@ impl ApplicationHandler for Dragonfly {
             let window_attributes = Window::default_attributes()
                 .with_title("Dragonfly")
                 .with_min_inner_size(winit::dpi::PhysicalSize {
-                    width: 1980,
+                    width: 1020,
                     height: 1020,
                 });
             let window = Arc::new(
