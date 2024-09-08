@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{ops::Deref, sync::Arc};
 
 use pollster;
 
@@ -120,7 +120,7 @@ impl ApplicationHandler for Dragonfly {
                         self.context.as_mut().unwrap().device.create_buffer_init(
                             &wgpu::util::BufferInitDescriptor {
                                 label: Some("Vertex Buffer"),
-                                contents: bytemuck::cast_slice(vertices),
+                                contents: bytemuck::cast_slice(vertices.deref()),
                                 usage: wgpu::BufferUsages::VERTEX,
                             },
                         );
@@ -130,7 +130,7 @@ impl ApplicationHandler for Dragonfly {
                         self.context.as_mut().unwrap().device.create_buffer_init(
                             &wgpu::util::BufferInitDescriptor {
                                 label: Some("Index Buffer"),
-                                contents: bytemuck::cast_slice(indices),
+                                contents: bytemuck::cast_slice(indices.deref()),
                                 usage: wgpu::BufferUsages::INDEX,
                             },
                         );

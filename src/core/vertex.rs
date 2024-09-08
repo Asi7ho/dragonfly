@@ -1,4 +1,72 @@
 use bytemuck;
+use std::rc::Rc;
+
+/// Generates a vector of vertices for a circle with the given number of
+/// segments.
+///
+/// The circle is centered at the origin and has a radius of 0.5. The vertices
+/// are arranged in a counter-clockwise direction.
+///
+/// # Arguments
+///
+/// * `num_segments` - The number of segments to divide the circle into.
+///
+/// # Returns
+///
+/// A vector of `Vertex` structs representing the vertices of the circle.
+macro_rules! circle_vertices {
+    ($num_segments:expr) => {{
+        const NUM_SEGMENTS: usize = $num_segments;
+        const TWO_PI: f32 = std::f32::consts::PI * 2.0;
+
+        let vertices: Vec<Vertex> = std::iter::once(Vertex {
+            position: [0.0, 0.0, 0.0],
+            color: [0.5, 0.5, 0.5],
+        })
+        .chain((0..(NUM_SEGMENTS + 1)).map(|i| {
+            let angle = i as f32 * TWO_PI / NUM_SEGMENTS as f32;
+            Vertex {
+                position: [0.5 * angle.cos(), 0.5 * angle.sin(), 0.0],
+                color: [
+                    angle.sin(),
+                    (angle + 2.0 * TWO_PI / 6.0).sin(),
+                    (angle + 4.0 * TWO_PI / 6.0).sin(),
+                ],
+            }
+        }))
+        .collect();
+
+        vertices
+    }};
+}
+
+/// Generates a vector of indices for a circle with the given number of
+/// segments.
+///
+/// The circle is assumed to have `num_segments + 1` vertices, with the first
+/// vertex being the center of the circle. The indices are arranged in a
+/// counter-clockwise direction, starting at the second vertex and ending at the
+/// second-to-last vertex.
+///
+/// # Arguments
+///
+/// * `num_segments` - The number of segments to divide the circle into.
+///
+/// # Returns
+///
+/// A vector of `u16` values representing the indices of the vertices that make
+/// up the triangles that form the circle.
+macro_rules! circle_indices {
+    ($num_segments:expr) => {{
+        const NUM_SEGMENTS: usize = $num_segments;
+
+        let indices: Vec<u16> = (1..(NUM_SEGMENTS + 1) as u16)
+            .flat_map(|i| [0, i, i + 1])
+            .collect();
+
+        indices
+    }};
+}
 
 /// A vertex is a 3D point in space with a color.
 ///
@@ -54,14 +122,20 @@ pub enum Figure {
 
 impl Figure {
     /// Returns the vertices and indices for the given figure.
-    pub fn get_vertices_and_indices(&self) -> (&[Vertex], &[u16]) {
+    pub fn get_vertices_and_indices(&self) -> (Rc<[Vertex]>, Rc<[u16]>) {
         match self {
-            Figure::Triangle => (TRIANGLE_VERTICES, TRIANGLE_INDICES),
-            Figure::Hexagon => (HEXAGON_VERTICES, HEXAGON_INDICES),
-            Figure::Rectange => (RECTANGLE_VERTICES, RECTANGLE_INDICES),
-            Figure::Trapezoid => (TRAPEZOID_VERTICES, TRAPEZOID_INDICES),
-            Figure::Parallelogram => (PARALLELOGRAM_VERTICES, PARALLELOGRAM_INDICES),
-            Figure::Circle => (CIRCLE_VERTICES, CIRCLE_INDICES),
+            Figure::Triangle => (Rc::from(TRIANGLE_VERTICES), Rc::from(TRIANGLE_INDICES)),
+            Figure::Hexagon => (Rc::from(HEXAGON_VERTICES), Rc::from(HEXAGON_INDICES)),
+            Figure::Rectange => (Rc::from(RECTANGLE_VERTICES), Rc::from(RECTANGLE_INDICES)),
+            Figure::Trapezoid => (Rc::from(TRAPEZOID_VERTICES), Rc::from(TRAPEZOID_INDICES)),
+            Figure::Parallelogram => (
+                Rc::from(PARALLELOGRAM_VERTICES),
+                Rc::from(PARALLELOGRAM_INDICES),
+            ),
+            Figure::Circle => (
+                Rc::from(circle_vertices!(64).into_boxed_slice()),
+                Rc::from(circle_indices!(64).into_boxed_slice()),
+            ),
         }
     }
 
@@ -190,80 +264,3 @@ const PARALLELOGRAM_VERTICES: &[Vertex] = &[
     },
 ];
 const PARALLELOGRAM_INDICES: &[u16] = &[0, 1, 2, 0, 2, 3];
-
-// Circle
-const CIRCLE_VERTICES: &[Vertex] = &[
-    Vertex {
-        position: [0.0, 0.0, 0.0],
-        color: [1.0, 1.0, 1.0],
-    },
-    Vertex {
-        position: [0.5, 0.0, 0.0],
-        color: [1.0, 0.0, 0.0],
-    },
-    Vertex {
-        position: [0.4619398, 0.19134172, 0.0],
-        color: [0.0, 1.0, 0.0],
-    },
-    Vertex {
-        position: [0.35355338, 0.35355338, 0.0],
-        color: [0.0, 0.0, 1.0],
-    },
-    Vertex {
-        position: [0.19134172, 0.4619398, 0.0],
-        color: [1.0, 1.0, 0.0],
-    },
-    Vertex {
-        position: [0.0, 0.5, 0.0],
-        color: [1.0, 0.0, 1.0],
-    },
-    Vertex {
-        position: [-0.19134172, 0.4619398, 0.0],
-        color: [0.0, 1.0, 1.0],
-    },
-    Vertex {
-        position: [-0.35355338, 0.35355338, 0.0],
-        color: [0.5, 0.5, 0.5],
-    },
-    Vertex {
-        position: [-0.4619398, 0.19134172, 0.0],
-        color: [1.0, 0.5, 0.0],
-    },
-    Vertex {
-        position: [-0.5, 0.0, 0.0],
-        color: [0.0, 1.0, 0.5],
-    },
-    Vertex {
-        position: [-0.4619398, -0.19134172, 0.0],
-        color: [0.5, 0.0, 1.0],
-    },
-    Vertex {
-        position: [-0.35355338, -0.35355338, 0.0],
-        color: [1.0, 0.0, 0.5],
-    },
-    Vertex {
-        position: [-0.19134172, -0.4619398, 0.0],
-        color: [0.5, 1.0, 0.0],
-    },
-    Vertex {
-        position: [0.0, -0.5, 0.0],
-        color: [0.0, 0.5, 1.0],
-    },
-    Vertex {
-        position: [0.19134172, -0.4619398, 0.0],
-        color: [1.0, 0.5, 0.5],
-    },
-    Vertex {
-        position: [0.35355338, -0.35355338, 0.0],
-        color: [0.5, 1.0, 0.5],
-    },
-    Vertex {
-        position: [0.4619398, -0.19134172, 0.0],
-        color: [0.5, 0.5, 1.0],
-    },
-];
-
-const CIRCLE_INDICES: &[u16] = &[
-    0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6, 0, 6, 7, 0, 7, 8, 0, 8, 9, 0, 9, 10, 0, 10, 11, 0,
-    11, 12, 0, 12, 13, 0, 13, 14, 0, 14, 15, 0, 15, 16, 0, 16, 1,
-];
