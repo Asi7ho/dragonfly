@@ -18,13 +18,13 @@ mod tests {
         let device = create_test_device();
 
         let _shader =
-            device.create_shader_module(wgpu::include_wgsl!("../shader/simple_triangle.wgsl"));
+            device.create_shader_module(wgpu::include_wgsl!("../shaders/simple_triangle.wgsl"));
     }
 
     #[test]
     fn test_simple_figures_shader_module() {
         let device = create_test_device();
 
-        let _shader = device.create_shader_module(wgpu::include_wgsl!("../shader/shader.wgsl"));
+        let _shader = device.create_shader_module(wgpu::include_wgsl!("../shaders/shader.wgsl"));
     }
 }

@@ -108,7 +108,7 @@ impl Context {
         };
 
         // Create a shader module from a shader written in WGSL.
-        let shader = device.create_shader_module(wgpu::include_wgsl!("../shader/shader.wgsl"));
+        let shader = device.create_shader_module(wgpu::include_wgsl!("../shaders/shader.wgsl"));
 
         // Create the render pipeline layout.
         let render_pipeline_layout =
