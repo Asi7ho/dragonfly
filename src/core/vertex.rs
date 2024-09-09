@@ -113,7 +113,7 @@ impl Vertex {
 pub enum Figure {
     #[default]
     Triangle,
-    Hexagon,
+    Pentagon,
     Rectange,
     Trapezoid,
     Parallelogram,
@@ -125,7 +125,7 @@ impl Figure {
     pub fn get_vertices_and_indices(&self) -> (Rc<[Vertex]>, Rc<[u16]>) {
         match self {
             Figure::Triangle => (Rc::from(TRIANGLE_VERTICES), Rc::from(TRIANGLE_INDICES)),
-            Figure::Hexagon => (Rc::from(HEXAGON_VERTICES), Rc::from(HEXAGON_INDICES)),
+            Figure::Pentagon => (Rc::from(PENTAGON_VERTICES), Rc::from(PENTAGON_INDICES)),
             Figure::Rectange => (Rc::from(RECTANGLE_VERTICES), Rc::from(RECTANGLE_INDICES)),
             Figure::Trapezoid => (Rc::from(TRAPEZOID_VERTICES), Rc::from(TRAPEZOID_INDICES)),
             Figure::Parallelogram => (
@@ -146,7 +146,7 @@ impl Figure {
     pub fn get_figure(i: u8) -> Self {
         match i {
             0 => Figure::Triangle,
-            1 => Figure::Hexagon,
+            1 => Figure::Pentagon,
             2 => Figure::Rectange,
             3 => Figure::Trapezoid,
             4 => Figure::Parallelogram,
@@ -174,7 +174,7 @@ const TRIANGLE_VERTICES: &[Vertex] = &[
 const TRIANGLE_INDICES: &[u16] = &[0, 1, 2];
 
 // Hexagon
-const HEXAGON_VERTICES: &[Vertex] = &[
+const PENTAGON_VERTICES: &[Vertex] = &[
     Vertex {
         position: [-0.0868241, 0.49240386, 0.0],
         color: [1.0, 0.0, 0.0],
@@ -196,7 +196,7 @@ const HEXAGON_VERTICES: &[Vertex] = &[
         color: [0.0, 0.0, 1.0],
     },
 ];
-const HEXAGON_INDICES: &[u16] = &[0, 1, 4, 1, 2, 4, 2, 3, 4];
+const PENTAGON_INDICES: &[u16] = &[0, 1, 4, 1, 2, 4, 2, 3, 4];
 
 // Rectange
 const RECTANGLE_VERTICES: &[Vertex] = &[
@@ -230,10 +230,6 @@ const TRAPEZOID_VERTICES: &[Vertex] = &[
         color: [0.5, 0.5, 0.0],
     },
     Vertex {
-        position: [0.0, -0.5, 0.0],
-        color: [0.0, 1.0, 0.0],
-    },
-    Vertex {
         position: [0.5, -0.5, 0.0],
         color: [0.0, 0.5, 0.5],
     },
@@ -242,7 +238,7 @@ const TRAPEZOID_VERTICES: &[Vertex] = &[
         color: [0.0, 0.0, 1.0],
     },
 ];
-const TRAPEZOID_INDICES: &[u16] = &[0, 1, 2, 0, 2, 4, 2, 3, 4];
+const TRAPEZOID_INDICES: &[u16] = &[0, 1, 2, 0, 2, 3];
 
 // Parallelogram
 const PARALLELOGRAM_VERTICES: &[Vertex] = &[
