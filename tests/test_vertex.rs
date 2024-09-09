@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
 
-    use dragonfly::core::Figure;
+    use dragonfly::vertex::Figure;
 
     #[test]
     fn test_figure_get_vertices_and_indices() {

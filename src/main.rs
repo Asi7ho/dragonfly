@@ -1,7 +1,6 @@
 use winit::event_loop::{ControlFlow, EventLoop};
 
-mod core;
-
+mod context;
 mod dragonfly;
 
 fn main() {

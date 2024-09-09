@@ -1,5 +1,6 @@
 use std::{ops::Deref, sync::Arc};
 
+use dragonfly::vertex;
 use pollster;
 
 use wgpu::util::DeviceExt;
@@ -10,7 +11,7 @@ use winit::{
     window::{Window, WindowId},
 };
 
-use crate::core;
+use crate::context::Context;
 
 /// The application state.
 ///
@@ -20,7 +21,7 @@ pub struct Dragonfly {
     /// The graphics context.
     ///
     /// Contains the data necessary to render the scene.
-    context: Option<core::Context>,
+    context: Option<Context>,
 
     /// The window.
     ///
@@ -49,7 +50,7 @@ impl ApplicationHandler for Dragonfly {
                     .expect("Failed to create window."),
             );
 
-            let context = pollster::block_on(core::Context::new(&window));
+            let context = pollster::block_on(Context::new(&window));
             self.window = Some(window);
             self.context = Some(context);
         }
@@ -113,7 +114,7 @@ impl ApplicationHandler for Dragonfly {
 
                     self.context.as_mut().unwrap().fig_idx = new_fig_idx;
 
-                    let figure = core::Figure::get_figure(new_fig_idx);
+                    let figure = vertex::Figure::get_figure(new_fig_idx);
                     let (vertices, indices) = figure.get_vertices_and_indices();
 
                     self.context.as_mut().unwrap().vertex_buffer =

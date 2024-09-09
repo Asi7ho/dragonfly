@@ -1,9 +1,8 @@
 use std::{ops::Deref, sync::Arc};
 
+use dragonfly::vertex::{self, Vertex};
 use wgpu::util::DeviceExt;
 use winit::window::Window;
-
-use crate::core;
 
 /// Graphics context for rendering.
 ///
@@ -109,7 +108,7 @@ impl Context {
         };
 
         // Create a shader module from a shader written in WGSL.
-        let shader = device.create_shader_module(wgpu::include_wgsl!("../../shader/shader.wgsl"));
+        let shader = device.create_shader_module(wgpu::include_wgsl!("../shader/shader.wgsl"));
 
         // Create the render pipeline layout.
         let render_pipeline_layout =
@@ -127,7 +126,7 @@ impl Context {
             vertex: wgpu::VertexState {
                 module: &shader,
                 entry_point: "vs_main",
-                buffers: &[core::vertex::Vertex::desc()],
+                buffers: &[Vertex::desc()],
                 compilation_options: wgpu::PipelineCompilationOptions::default(),
             },
             // Read fragment shader
@@ -163,7 +162,7 @@ impl Context {
 
         // Set the initial figure
         let fig_idx = 0;
-        let figure = core::Figure::get_figure(fig_idx);
+        let figure = vertex::Figure::get_figure(fig_idx);
         let (vertices, indices) = figure.get_vertices_and_indices();
 
         // Create the vertex and index buffers
