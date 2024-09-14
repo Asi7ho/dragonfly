@@ -3,10 +3,28 @@ name = "dragonfly"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
-bytemuck = { version = "1.18.0", features = ["derive"] }
-env_logger = "0.11.5"
-log = "0.4.22"
-pollster = "0.3.0"
-wgpu = "22.1.0"
-winit = "0.30.5"
+
+[dependencies.bytemuck]
+# Crate link: https://crates.io/crates/bytemuck
+version = "1.18.0"
+features = ["derive"]
+
+[dependencies.env_logger]
+# Crate link: https://crates.io/crates/env_logger
+version = "0.11.5"
+
+[dependencies.log]
+# Crate link: https://crates.io/crates/log
+version = "0.4.22"
+
+[dependencies.pollster]
+# Crate link: https://crates.io/crates/pollster
+version = "0.3.0"
+
+[dependencies.wgpu]
+# Crate link: https://crates.io/crates/wgpu
+version = "22.1.0"
+
+[dependencies.winit]
+# Crate link: https://crates.io/crates/winit
+version = "0.30.5"
