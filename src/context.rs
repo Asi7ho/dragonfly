@@ -1,6 +1,6 @@
-use std::{ops::Deref, sync::Arc};
+use std::sync::Arc;
 
-use dragonfly::vertex::{self, Vertex};
+use dragonfly::vertex::{self, Mesh, Vertex};
 use wgpu::util::DeviceExt;
 use winit::window::Window;
 
@@ -163,18 +163,19 @@ impl Context {
         // Set the initial figure
         let fig_idx = 0;
         let figure = vertex::Figure::get_figure(fig_idx);
-        let (vertices, indices) = figure.get_vertices_and_indices();
+        let vertices = figure.get_vertices();
+        let indices = figure.get_indices();
 
         // Create the vertex and index buffers
         let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
             label: Some("Vertex Buffer"),
-            contents: bytemuck::cast_slice(vertices.deref()),
+            contents: bytemuck::cast_slice(&vertices),
             usage: wgpu::BufferUsages::VERTEX,
         });
 
         let index_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
             label: Some("Index Buffer"),
-            contents: bytemuck::cast_slice(indices.deref()),
+            contents: bytemuck::cast_slice(&indices),
             usage: wgpu::BufferUsages::INDEX,
         });
 

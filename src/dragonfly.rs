@@ -1,6 +1,6 @@
-use std::{ops::Deref, sync::Arc};
+use std::sync::Arc;
 
-use dragonfly::vertex;
+use dragonfly::vertex::{self, Mesh};
 use pollster;
 
 use wgpu::util::DeviceExt;
@@ -115,13 +115,14 @@ impl ApplicationHandler for Dragonfly {
                     self.context.as_mut().unwrap().fig_idx = new_fig_idx;
 
                     let figure = vertex::Figure::get_figure(new_fig_idx);
-                    let (vertices, indices) = figure.get_vertices_and_indices();
+                    let vertices = figure.get_vertices();
+                    let indices = figure.get_indices();
 
                     self.context.as_mut().unwrap().vertex_buffer =
                         self.context.as_mut().unwrap().device.create_buffer_init(
                             &wgpu::util::BufferInitDescriptor {
                                 label: Some("Vertex Buffer"),
-                                contents: bytemuck::cast_slice(vertices.deref()),
+                                contents: bytemuck::cast_slice(&vertices),
                                 usage: wgpu::BufferUsages::VERTEX,
                             },
                         );
@@ -131,7 +132,7 @@ impl ApplicationHandler for Dragonfly {
                         self.context.as_mut().unwrap().device.create_buffer_init(
                             &wgpu::util::BufferInitDescriptor {
                                 label: Some("Index Buffer"),
-                                contents: bytemuck::cast_slice(indices.deref()),
+                                contents: bytemuck::cast_slice(&indices),
                                 usage: wgpu::BufferUsages::INDEX,
                             },
                         );

@@ -1,37 +1,58 @@
 #[cfg(test)]
 mod tests {
 
-    use dragonfly::vertex::Figure;
+    use dragonfly::vertex::{Figure, Mesh};
 
     #[test]
-    fn test_figure_get_vertices_and_indices() {
-        let triangle = Figure::Triangle;
-        let (vertices, indices) = triangle.get_vertices_and_indices();
+    fn test_triangle_vertices_and_indices() {
+        let figure = Figure::Triangle;
+        let vertices = figure.get_vertices();
+        let indices = figure.get_indices();
         assert_eq!(vertices.len(), 3);
         assert_eq!(indices.len(), 3);
+    }
 
-        let pentagon = Figure::Pentagon;
-        let (vertices, indices) = pentagon.get_vertices_and_indices();
+    #[test]
+    fn test_pentagon_vertices_and_indices() {
+        let figure = Figure::Pentagon;
+        let vertices = figure.get_vertices();
+        let indices = figure.get_indices();
         assert_eq!(vertices.len(), 5);
         assert_eq!(indices.len(), 9);
+    }
 
-        let rectangle = Figure::Rectange;
-        let (vertices, indices) = rectangle.get_vertices_and_indices();
+    #[test]
+    fn test_rectangle_vertices_and_indices() {
+        let figure = Figure::Rectangle;
+        let vertices = figure.get_vertices();
+        let indices = figure.get_indices();
         assert_eq!(vertices.len(), 4);
         assert_eq!(indices.len(), 6);
+    }
 
-        let trapezoid = Figure::Trapezoid;
-        let (vertices, indices) = trapezoid.get_vertices_and_indices();
+    #[test]
+    fn test_trapezoid_vertices_and_indices() {
+        let figure = Figure::Trapezoid;
+        let vertices = figure.get_vertices();
+        let indices = figure.get_indices();
         assert_eq!(vertices.len(), 4);
         assert_eq!(indices.len(), 6);
+    }
 
-        let parallelogram = Figure::Parallelogram;
-        let (vertices, indices) = parallelogram.get_vertices_and_indices();
+    #[test]
+    fn test_parallelogram_vertices_and_indices() {
+        let figure = Figure::Parallelogram;
+        let vertices = figure.get_vertices();
+        let indices = figure.get_indices();
         assert_eq!(vertices.len(), 4);
         assert_eq!(indices.len(), 6);
+    }
 
-        let circle = Figure::Circle; // 64 segments
-        let (vertices, indices) = circle.get_vertices_and_indices();
+    #[test]
+    fn test_circle_vertices_and_indices() {
+        let figure = Figure::Circle(64);
+        let vertices = figure.get_vertices();
+        let indices = figure.get_indices();
         assert_eq!(vertices.len(), 66);
         assert_eq!(indices.len(), 192);
     }

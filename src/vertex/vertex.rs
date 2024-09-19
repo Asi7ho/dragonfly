@@ -1,5 +1,4 @@
 use bytemuck;
-use std::rc::Rc;
 
 /// A vertex is a 3D point in space with a color.
 ///
@@ -38,65 +37,6 @@ impl Vertex {
                     format: wgpu::VertexFormat::Float32x3,
                 },
             ],
-        }
-    }
-}
-
-#[derive(Debug, Default)]
-pub enum Figure {
-    #[default]
-    Triangle,
-    Pentagon,
-    Rectange,
-    Trapezoid,
-    Parallelogram,
-    Circle,
-}
-
-impl Figure {
-    /// Returns the vertices and indices for the given figure.
-    pub fn get_vertices_and_indices(&self) -> (Rc<[Vertex]>, Rc<[u16]>) {
-        match self {
-            Figure::Triangle => (
-                Rc::from(super::TRIANGLE_VERTICES),
-                Rc::from(super::TRIANGLE_INDICES),
-            ),
-            Figure::Pentagon => (
-                Rc::from(super::PENTAGON_VERTICES),
-                Rc::from(super::PENTAGON_INDICES),
-            ),
-            Figure::Rectange => (
-                Rc::from(super::RECTANGLE_VERTICES),
-                Rc::from(super::RECTANGLE_INDICES),
-            ),
-            Figure::Trapezoid => (
-                Rc::from(super::TRAPEZOID_VERTICES),
-                Rc::from(super::TRAPEZOID_INDICES),
-            ),
-            Figure::Parallelogram => (
-                Rc::from(super::PARALLELOGRAM_VERTICES),
-                Rc::from(super::PARALLELOGRAM_INDICES),
-            ),
-            Figure::Circle => (
-                Rc::from(crate::circle_vertices!(64).into_boxed_slice()),
-                Rc::from(crate::circle_indices!(64).into_boxed_slice()),
-            ),
-        }
-    }
-
-    /// Returns the figure at the given index.
-    ///
-    /// If the index is not in the range 0..4, the default figure (Triangle) is
-    /// returned.
-    pub fn get_figure(i: u8) -> Self {
-        match i {
-            0 => Figure::Triangle,
-            1 => Figure::Pentagon,
-            2 => Figure::Rectange,
-            3 => Figure::Trapezoid,
-            4 => Figure::Parallelogram,
-            5 => Figure::Circle,
-            _ => Figure::Triangle,
         }
     }
 }
