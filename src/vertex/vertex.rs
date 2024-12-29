@@ -17,6 +17,9 @@ pub struct Vertex {
 }
 
 impl Vertex {
+    pub const fn new(position: [f32; 3], color: [f32; 3]) -> Self {
+        Self { position, color }
+    }
     /// Returns the vertex buffer layout for the `Vertex` type.
     ///
     /// The layout is suitable for use with a vertex shader that takes a

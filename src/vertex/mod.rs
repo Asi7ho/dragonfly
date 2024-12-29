@@ -37,94 +37,34 @@ impl Mesh for Figure {
     fn get_vertices(&self) -> Vec<Vertex> {
         match self {
             Figure::Triangle => vec![
-                Vertex {
-                    position: [0.0, 0.5, 0.0],
-                    color: [1.0, 0.0, 0.0],
-                },
-                Vertex {
-                    position: [-0.5, -0.5, 0.0],
-                    color: [0.0, 1.0, 0.0],
-                },
-                Vertex {
-                    position: [0.5, -0.5, 0.0],
-                    color: [0.0, 0.0, 1.0],
-                },
+                Vertex::new([0.0, 0.5, 0.0], [1.0, 0.0, 0.0]),
+                Vertex::new([-0.5, -0.5, 0.0], [0.0, 1.0, 0.0]),
+                Vertex::new([0.5, -0.5, 0.0], [0.0, 0.0, 1.0]),
             ],
             Figure::Pentagon => vec![
-                Vertex {
-                    position: [-0.0868241, 0.49240386, 0.0],
-                    color: [1.0, 0.0, 0.0],
-                },
-                Vertex {
-                    position: [-0.49513406, 0.06958647, 0.0],
-                    color: [0.5, 0.5, 0.0],
-                },
-                Vertex {
-                    position: [-0.21918549, -0.44939706, 0.0],
-                    color: [0.0, 1.0, 0.0],
-                },
-                Vertex {
-                    position: [0.35966998, -0.3473291, 0.0],
-                    color: [0.0, 0.5, 0.5],
-                },
-                Vertex {
-                    position: [0.44147372, 0.2347359, 0.0],
-                    color: [0.0, 0.0, 1.0],
-                },
+                Vertex::new([-0.0868241, 0.49240386, 0.0], [1.0, 0.0, 0.0]),
+                Vertex::new([-0.49513406, 0.06958647, 0.0], [0.5, 0.5, 0.0]),
+                Vertex::new([-0.21918549, -0.44939706, 0.0], [0.0, 1.0, 0.0]),
+                Vertex::new([0.37464099, -0.3473291, 0.0], [0.0, 0.5, 0.5]),
+                Vertex::new([0.44147372, 0.2347359, 0.0], [0.0, 0.0, 1.0]),
             ],
             Figure::Rectangle => vec![
-                Vertex {
-                    position: [-0.5, 0.25, 0.0],
-                    color: [1.0, 0.0, 0.0],
-                },
-                Vertex {
-                    position: [-0.5, -0.25, 0.0],
-                    color: [0.5, 0.5, 0.0],
-                },
-                Vertex {
-                    position: [0.5, -0.25, 0.0],
-                    color: [0.0, 0.5, 0.5],
-                },
-                Vertex {
-                    position: [0.5, 0.25, 0.0],
-                    color: [0.0, 0.0, 1.0],
-                },
+                Vertex::new([-0.5, 0.25, 0.0], [1.0, 0.0, 0.0]),
+                Vertex::new([-0.5, -0.25, 0.0], [0.5, 0.5, 0.0]),
+                Vertex::new([0.5, -0.25, 0.0], [0.0, 0.5, 0.5]),
+                Vertex::new([0.5, 0.25, 0.0], [0.0, 0.0, 1.0]),
             ],
             Figure::Trapezoid => vec![
-                Vertex {
-                    position: [-0.25, 0.5, 0.0],
-                    color: [1.0, 0.0, 0.0],
-                },
-                Vertex {
-                    position: [-0.5, -0.5, 0.0],
-                    color: [0.5, 0.5, 0.0],
-                },
-                Vertex {
-                    position: [0.5, -0.5, 0.0],
-                    color: [0.0, 0.5, 0.5],
-                },
-                Vertex {
-                    position: [0.25, 0.5, 0.0],
-                    color: [0.0, 0.0, 1.0],
-                },
+                Vertex::new([-0.25, 0.5, 0.0], [1.0, 0.0, 0.0]),
+                Vertex::new([-0.5, -0.5, 0.0], [0.5, 0.5, 0.0]),
+                Vertex::new([0.5, -0.5, 0.0], [0.0, 0.5, 0.5]),
+                Vertex::new([0.25, 0.5, 0.0], [0.0, 0.0, 1.0]),
             ],
             Figure::Parallelogram => vec![
-                Vertex {
-                    position: [-0.25, 0.5, 0.0],
-                    color: [1.0, 0.0, 0.0],
-                },
-                Vertex {
-                    position: [-0.5, -0.5, 0.0],
-                    color: [0.5, 0.5, 0.0],
-                },
-                Vertex {
-                    position: [0.25, -0.5, 0.0],
-                    color: [0.0, 0.5, 0.5],
-                },
-                Vertex {
-                    position: [0.5, 0.5, 0.0],
-                    color: [0.0, 0.0, 1.0],
-                },
+                Vertex::new([-0.25, 0.5, 0.0], [1.0, 0.0, 0.0]),
+                Vertex::new([-0.5, -0.5, 0.0], [0.5, 0.5, 0.0]),
+                Vertex::new([0.25, -0.5, 0.0], [0.0, 0.5, 0.5]),
+                Vertex::new([0.5, 0.5, 0.0], [0.0, 0.0, 1.0]),
             ],
             Figure::Circle(num_segments) => {
                 const TWO_PI: f32 = 2.0 * std::f32::consts::PI;
@@ -135,14 +75,14 @@ impl Mesh for Figure {
                 })
                 .chain((0..(num_segments + 1)).map(|i| {
                     let angle = i as f32 * TWO_PI / *num_segments as f32;
-                    Vertex {
-                        position: [0.5 * angle.cos(), 0.5 * angle.sin(), 0.0],
-                        color: [
+                    Vertex::new(
+                        [0.5 * angle.cos(), 0.5 * angle.sin(), 0.0],
+                        [
                             angle.sin(),
                             (angle + 2.0 * TWO_PI / 6.0).sin(),
                             (angle + 4.0 * TWO_PI / 6.0).sin(),
                         ],
-                    }
+                    )
                 }))
                 .collect();
 
